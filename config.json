@@ -8,6 +8,11 @@
     ],
     "authors": [
         {
+            "name": "Antonio De Patto",
+            "email": "anto80@gmail.com",
+            "institution": "EMN Italy"
+        },
+        {
             "name": "Philip Chase",
             "email": "pbc@ufl.edu",
             "institution": "University of Florida - CTSI"
@@ -55,10 +60,27 @@
     ],
     "project-settings": [
         {
-            "key": "forms-exceptions",
-            "name": "Forms Exceptions",
-            "type": "form-list",
-            "repeatable": true
+            "key": "events-forms-exceptions",
+            "name": "Events Forms Exceptions",
+            "type": "sub_settings",
+            "repeatable":true,
+            "sub_settings":[
+                {
+                    "key": "event-name",
+                    "name": "Event name",
+                    "type": "event-list"
+                },
+                {
+                    "key": "form-name",
+                    "name": "Form name",
+                    "type": "form-list"
+                },
+                {
+                    "key": "trigger-after-form",
+                    "name": "Apply after form complete",
+                    "type": "form-list"
+                }
+            ]
         },
         {
           "key": "auto-locked-roles",

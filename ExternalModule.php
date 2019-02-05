@@ -109,8 +109,14 @@ class ExternalModule extends AbstractExternalModule {
             }
         }
 
-        if (!$exceptions = $this->getProjectSetting('forms-exceptions', $Proj->project_id)) {
-            $exceptions = array();
+        $events_forms_exceptions = $this->getProjectSetting('events-forms-exceptions', $Proj->project_id);
+        $events = $this->getProjectSetting('event-name', $Proj->project_id);
+        $forms = $this->getProjectSetting('form-name', $Proj->project_id);
+        $triggers = $this->getProjectSetting('trigger-after-form', $Proj->project_id);
+        
+        $exceptions = array();
+        foreach ($events_forms_exceptions as $i => $k) {
+            $exceptions[] = $events[$i] . '|' . $forms[$i] . '|' . $triggers[$i];
         }
 
         // Handling possible conflicts with CTSIT's Form Render Skip Logic.
@@ -125,14 +131,64 @@ class ExternalModule extends AbstractExternalModule {
         // Getting denied forms.
         $denied_forms = array();
         foreach ($forms_status as $id => $data) {
+            
             $denied_forms[$id] = array();
+            $completed = array();
+
+            // Getting completed forms
+            if (count($triggers)) {
+                foreach ($data as $event => $event_forms) {
+                    foreach ($event_forms as $form => $form_status) {
+
+                        // check if complete
+                        $complete = false;
+                        if (!empty($form_status)) {
+                            $complete = true;
+
+                            foreach ($form_status as $instance_status) {
+                                if ($instance_status != 2) {
+                                    $complete = false;
+                                    break;
+                                }
+                            }
+                        }
+                        $completed[$form] = $complete;
+
+                    }
+                }
+            }
 
             foreach (array_reverse($data, true) as $event => $event_forms) {
                 $denied_forms[$id][$event] = array();
 
                 foreach (array_reverse($event_forms, true) as $form => $form_status) {
-                    if (in_array($form, $exceptions)) {
-                        // Skip exception forms.
+
+
+                    // Event
+                    if (in_array($event . '||', $exceptions)) {
+                        continue;
+                    }
+
+                    // Instrument
+                    if (in_array('|' . $form . '|', $exceptions)) {
+                        continue;
+                    }
+
+                    // Event + Instrument
+                    if (in_array($event . '|' . $form . '|', $exceptions)) {
+                        continue;
+                    }
+
+                    // Event + Instrument + trigger
+                    $skip = false;
+                    foreach ($triggers as $trigger_form) {
+                        if (array_key_exists($trigger_form, $completed) && $completed[$trigger_form]) {
+                            if (in_array($event . '|' . $form . '|' . $trigger_form, $exceptions)) {
+                                $skip = true;
+                            }
+                        }
+                    }
+                    if ($skip) {
                         continue;
                     }
 
@@ -176,11 +232,14 @@ class ExternalModule extends AbstractExternalModule {
             }
         }
 
+
+
         if ($record && $event_id && isset($denied_forms[$record][$event_id][$instrument])) {
             // Access denied to the current page.
             $this->redirect(APP_PATH_WEBROOT . 'DataEntry/record_home.php?pid=' . $Proj->project_id . '&id=' . $record . '&arm=' . $arm);
             return false;
         }
+
 
         $settings = array(
             'deniedForms' => $denied_forms,
