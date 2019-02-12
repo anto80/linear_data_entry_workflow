@@ -55,10 +55,10 @@ class ExternalModule extends AbstractExternalModule {
             $record = $_GET['id'];
         }
 
-        if ($this->loadRFIO('data_entry_form', $Proj->eventInfo[$event_id]['arm_num'], $record, $event_id, $instrument)) {
-            $this->loadFDEC($instrument);
-            $this->loadAutoLock($instrument);
-        }
+        // if ($this->loadRFIO('data_entry_form', $Proj->eventInfo[$event_id]['arm_num'], $record, $event_id, $instrument)) {
+        //     $this->loadFDEC($instrument);
+        //      $this->loadAutoLock($instrument);
+        // }
     }
 
     /**

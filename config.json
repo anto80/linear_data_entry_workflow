@@ -83,12 +83,6 @@
             ]
         },
         {
-          "key": "auto-locked-roles",
-          "name": "auto-locked roles",
-          "type": "user-role-list",
-          "repeatable": true
-        },
-        {
             "key": "allow-independent-events",
             "name": "Allow events to be filled out independently from each other",
             "type": "checkbox"
