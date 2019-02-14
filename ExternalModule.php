@@ -128,6 +128,8 @@ class ExternalModule extends AbstractExternalModule {
         $prev_event = '';
         $prev_form = '';
 
+        $exceptionInstruments = array();
+
         // Getting denied forms.
         $denied_forms = array();
         foreach ($forms_status as $id => $data) {
@@ -158,6 +160,8 @@ class ExternalModule extends AbstractExternalModule {
                 }
             }
 
+            // var_Dump($completed);
+
             foreach (array_reverse($data, true) as $event => $event_forms) {
                 $denied_forms[$id][$event] = array();
 
@@ -171,11 +175,13 @@ class ExternalModule extends AbstractExternalModule {
 
                     // Instrument
                     if (in_array('|' . $form . '|', $exceptions)) {
+                        $exceptionInstruments[$event][$form] = true;
                         continue;
                     }
 
                     // Event + Instrument
                     if (in_array($event . '|' . $form . '|', $exceptions)) {
+                        $exceptionInstruments[$event][$form] = true;
                         continue;
                     }
 
@@ -189,6 +195,7 @@ class ExternalModule extends AbstractExternalModule {
                         }
                     }
                     if ($skip) {
+                        $exceptionInstruments[$event][$form] = true;
                         continue;
                     }
 
@@ -246,6 +253,7 @@ class ExternalModule extends AbstractExternalModule {
             'deniedForms' => $denied_forms,
             'location' => $location,
             'instrument' => $instrument,
+            'exceptionInstruments' => $exceptionInstruments,
             'isException' => in_array($instrument, $exceptions),
             'forceButtonsDisplay' => $Proj->lastFormName == $instrument ? 'show' : false,
             'hideNextRecordButton' => $this->getProjectSetting('hide-next-record-button', $Proj->project_id),

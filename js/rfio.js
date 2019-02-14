@@ -45,6 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
         ) {
             disableForm(this);
         }
+
+        if (
+            typeof settings.exceptionInstruments[params.id] !== 'undefined' &&
+            typeof settings.exceptionInstruments[params.id][params.event_id] !== 'undefined' &&
+            typeof settings.exceptionInstruments[params.id][params.event_id][params.page] !== 'undefined'
+        ) {
+            setInExceptionForm(this);
+        }
+
     });
 
     /**
@@ -53,6 +62,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function disableForm(cell) {
         cell.style.pointerEvents = 'none';
         cell.style.opacity = '.1';
+    }
+
+    function setInExceptionForm(cell) {
+        cell.style.height = '20px';
+        cell.style.width = '20px';
+        cell.style.border = '2px solid #ffc107';
+        cell.style.borderRadius = '10px';
     }
 
     /**
