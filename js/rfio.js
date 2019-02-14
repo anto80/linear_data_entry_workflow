@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setInExceptionForm(cell) {
-        cell.style.height = '20px';
-        cell.style.width = '20px';
-        cell.style.border = '2px solid #ffc107';
-        cell.style.borderRadius = '10px';
+        cell.childNodes[0].style.height = '20px';
+        cell.childNodes[0].style.width = '20px';
+        cell.childNodes[0].style.border = '2px solid #ffc107';
+        cell.childNodes[0].style.borderRadius = '10px';
     }
 
     /**

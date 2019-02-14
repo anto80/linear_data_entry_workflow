@@ -175,13 +175,13 @@ class ExternalModule extends AbstractExternalModule {
 
                     // Instrument
                     if (in_array('|' . $form . '|', $exceptions)) {
-                        $exceptionInstruments[$event][$form] = true;
+                        $exceptionInstruments[$id][$event][$form] = true;
                         continue;
                     }
 
                     // Event + Instrument
                     if (in_array($event . '|' . $form . '|', $exceptions)) {
-                        $exceptionInstruments[$event][$form] = true;
+                        $exceptionInstruments[$id][$event][$form] = true;
                         continue;
                     }
 
@@ -195,7 +195,7 @@ class ExternalModule extends AbstractExternalModule {
                         }
                     }
                     if ($skip) {
-                        $exceptionInstruments[$event][$form] = true;
+                        $exceptionInstruments[$id][$event][$form] = true;
                         continue;
                     }
 
