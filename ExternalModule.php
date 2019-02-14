@@ -226,9 +226,10 @@ class ExternalModule extends AbstractExternalModule {
                     $prev_event = '';
                     $prev_form = '';
                 }
-                elseif (!isset($denied_forms[$id][$prev_event][$prev_form])) {
-                    break;
-                }
+                /* BUG : if all instruments are in exceptions skip all */ 
+                // elseif (!isset($denied_forms[$id][$prev_event][$prev_form])) {
+                //     break;
+                // }
             }
         }
 
