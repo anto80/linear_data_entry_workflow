@@ -55,6 +55,8 @@ class ExternalModule extends AbstractExternalModule {
             $record = $_GET['id'];
         }
 
+        $this->loadRFIO('data_entry_form', $Proj->eventInfo[$event_id]['arm_num'], $record, $event_id, $instrument);
+        
         // if ($this->loadRFIO('data_entry_form', $Proj->eventInfo[$event_id]['arm_num'], $record, $event_id, $instrument)) {
         //     $this->loadFDEC($instrument);
         //      $this->loadAutoLock($instrument);
@@ -398,6 +400,41 @@ class ExternalModule extends AbstractExternalModule {
     protected function includeJs($path) {
         echo '<script src="' . $this->getUrl($path) . '"></script>';
     }
+
+
+    /** 
+     * 
+     * Riattivare per testare il JS in locale, altrimenti carica lo script remoto 
+     * 
+     * */
+    // function getUrl($path, $noAuth = false, $useApiEndpoint = false)
+    // {
+    //     $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+    //     // Include 'md' files as well to render README.md documentation.
+    //     $isPhpPath = in_array($extension, ['php', 'md']) || (preg_match("/\.php\?/", $path));
+    //     if ($isPhpPath || $useApiEndpoint) {
+    //         // GET parameters after php file -OR- php extension
+    //         $url = ExternalModules::getUrl($this->PREFIX, $path, $useApiEndpoint);
+    //         if ($isPhpPath) {
+    //             $pid = self::detectProjectId();
+    //             if (!empty($pid) && !preg_match("/[\&\?]pid=/", $url)){
+    //                 $url .= '&pid='.$pid;
+    //             }
+    //             if ($noAuth && !preg_match("/NOAUTH/", $url)) {
+    //                 $url .= '&NOAUTH';
+    //             }
+    //         }
+    //     } else {
+    //         // This must be a resource, like an image or css/js file.
+    //         // Go ahead and return the version specific url.
+    //         $pathPrefix = ExternalModules::getModuleDirectoryPath($this->PREFIX, $this->VERSION);
+    //         $url = '/modules/' . $this->PREFIX . '_' . $this->VERSION . '/' . $path . '?' . filemtime($pathPrefix . '/' . $path);
+    //         //ExternalModules::getModuleDirectoryUrl($this->PREFIX, $this->VERSION) . $path . '?' . filemtime($pathPrefix . '/' . $path);
+    //     }
+    //     return $url;
+    // }
+    
 
     /**
      * Sets a JS setting.

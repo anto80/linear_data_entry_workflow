@@ -65,6 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setInExceptionForm(cell) {
+
+        if(!cell.childNodes[0].style) {
+            return;
+        }
+
         cell.childNodes[0].style.height = '20px';
         cell.childNodes[0].style.width = '20px';
         cell.childNodes[0].style.border = '3px solid #ffffff';
