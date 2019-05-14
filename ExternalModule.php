@@ -191,7 +191,7 @@ class ExternalModule extends AbstractExternalModule {
                     $skip = false;
                     foreach ($triggers as $trigger_form) {
                         if (array_key_exists($trigger_form, $completed) && $completed[$trigger_form]) {
-                            if (in_array($event . '|' . $form . '|' . $trigger_form, $exceptions)) {
+                            if (in_array($event . '|' . $form . '|' . $trigger_form, $exceptions) || in_array('|' . $form . '|' . $trigger_form, $exceptions)) {
                                 $skip = true;
                             }
                         }
