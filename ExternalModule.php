@@ -222,7 +222,9 @@ class ExternalModule extends AbstractExternalModule {
                             unset($denied_forms[$id][$prev_event][$prev_form]);
                         }
 
-                        break;
+                        $prev_event = $event;
+                        $prev_form = $form;
+                        continue;
                     }
 
                     $denied_forms[$id][$event][$form] = $form;
