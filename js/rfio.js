@@ -105,7 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
     /**
      * Hide "Save and Go to Next Form" buttons.
      */
-    function hideNextFormButtons(instrument, force = false) {
+    function hideNextFormButtons(instrument, force) {
+
+        force = force || false;
+        
         // Handling "Ignore and go to next form" button on required fields
         // dialog.
         $('#reqPopup').on('dialogopen', function(event, ui) {
