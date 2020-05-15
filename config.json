@@ -82,7 +82,7 @@
                 },
                 {
                     "key": "trigger-after-event",
-                    "name": "Apply after event complete",
+                    "name": "Specify EVENT of 'after complete' form",
                     "type": "event-list"
                 }
             ]
