@@ -114,11 +114,19 @@ class ExternalModule extends AbstractExternalModule {
         $events_forms_exceptions = $this->getProjectSetting('events-forms-exceptions', $Proj->project_id);
         $events = $this->getProjectSetting('event-name', $Proj->project_id);
         $forms = $this->getProjectSetting('form-name', $Proj->project_id);
-        $triggers = $this->getProjectSetting('trigger-after-form', $Proj->project_id);
-        
+        $triggers_form = $this->getProjectSetting('trigger-after-form', $Proj->project_id);
+        $triggers_event = $this->getProjectSetting('trigger-after-event', $Proj->project_id);
+        $triggers = array();
+
+        foreach ($triggers_form as $i => $t) {
+            $event = $triggers_event[$i];
+            $form = $triggers_form[$i];
+            $triggers[$event][$form] = true;
+        }
+
         $exceptions = array();
         foreach ($events_forms_exceptions as $i => $k) {
-            $exceptions[] = $events[$i] . '|' . $forms[$i] . '|' . $triggers[$i];
+            $exceptions[] = $events[$i] . '|' . $forms[$i] . '|' . $triggers_event[$i] . $triggers_form[$i];
         }
 
         // Handling possible conflicts with CTSIT's Form Render Skip Logic.
@@ -134,14 +142,19 @@ class ExternalModule extends AbstractExternalModule {
 
         // Getting denied forms.
         $denied_forms = array();
+        $completed = array();
         foreach ($forms_status as $id => $data) {
             
             $denied_forms[$id] = array();
-            $completed = array();
+            $completed[$id] = array();
 
             // Getting completed forms
             if (count($triggers)) {
+
                 foreach ($data as $event => $event_forms) {
+
+                    $completed[$id][$event] = array();
+
                     foreach ($event_forms as $form => $form_status) {
 
                         // check if complete
@@ -156,7 +169,8 @@ class ExternalModule extends AbstractExternalModule {
                                 }
                             }
                         }
-                        $completed[$form] = $complete;
+
+                        $completed[$id][$event][$form] = $complete;
 
                     }
                 }
@@ -165,13 +179,14 @@ class ExternalModule extends AbstractExternalModule {
             // var_Dump($completed);
 
             foreach (array_reverse($data, true) as $event => $event_forms) {
+                
                 $denied_forms[$id][$event] = array();
 
                 foreach (array_reverse($event_forms, true) as $form => $form_status) {
 
-
                     // Event
                     if (in_array($event . '||', $exceptions)) {
+                        $exceptionInstruments[$id][$event][$form] = true;
                         continue;
                     }
 
@@ -187,15 +202,22 @@ class ExternalModule extends AbstractExternalModule {
                         continue;
                     }
 
-                    // Event + Instrument + trigger
+                    // Event + Instrument + trigger (After complete)
                     $skip = false;
-                    foreach ($triggers as $trigger_form) {
-                        if (array_key_exists($trigger_form, $completed) && $completed[$trigger_form]) {
-                            if (in_array($event . '|' . $form . '|' . $trigger_form, $exceptions) || in_array('|' . $form . '|' . $trigger_form, $exceptions)) {
-                                $skip = true;
+                    foreach ($triggers as $trigger_event => $trigger_forms) {
+                        foreach ($trigger_forms as $trigger_form => $tv) {
+                            if (array_key_exists($trigger_event, $completed[$id]) && $completed[$id][$trigger_event][$trigger_form]) { // complete
+
+                                if (
+                                    in_array($event . '|' . $form . '|' . $trigger_event . $trigger_form, $exceptions) || 
+                                    in_array('|' . $form . '|' . $trigger_event . $trigger_form, $exceptions)
+                                ) {
+                                    $skip = true;
+                                }
                             }
                         }
                     }
+
                     if ($skip) {
                         $exceptionInstruments[$id][$event][$form] = true;
                         continue;
