@@ -79,11 +79,6 @@
                     "key": "trigger-after-form",
                     "name": "Apply after form complete",
                     "type": "form-list"
-                },
-                {
-                    "key": "trigger-after-event",
-                    "name": "Apply after event complete",
-                    "type": "event-list"
                 }
             ]
         },
